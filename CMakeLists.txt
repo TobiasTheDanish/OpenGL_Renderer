@@ -18,10 +18,13 @@ add_library(renderer ./src/VertexBuffer.cpp ./src/IndexBuffer.cpp ./src/Renderer
 
 target_link_libraries(renderer utils)
 
+find_library(STB_LIB stb_image.h PATHS "./src/vendor/stb_image/stb_image.h")
+message("${STB_LIB}")
 find_package(GLEW REQUIRED)
 
 include_directories(
 	./src/INCLUDES/
+	./src/vendor/stb_image/
 	${GLEW_INCLUDE_DIRS} 
 	./libs/glfw-3.3.8/include/) 
 
