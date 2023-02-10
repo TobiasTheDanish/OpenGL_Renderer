@@ -14,7 +14,7 @@ add_definitions( -DGLEW_NO_GLU )
 
 add_subdirectory(./libs/glfw-3.3.8/)
 add_library(utils ./src/utils/glErrorUtils.cpp ./src/utils/shaderUtils.cpp)
-add_library(renderer ./src/VertexBuffer.cpp ./src/IndexBuffer.cpp ./src/Renderer.cpp ./src/Shader.cpp)
+add_library(renderer ./src/VertexBuffer.cpp ./src/IndexBuffer.cpp ./src/Renderer.cpp ./src/Shader.cpp ./src/VertexArray.cpp ./src/VertexBufferLayout.cpp)
 
 target_link_libraries(renderer utils)
 

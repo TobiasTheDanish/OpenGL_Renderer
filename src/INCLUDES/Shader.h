@@ -13,8 +13,8 @@ private:
 public:
 	Shader(const std::string& filepath);
 	~Shader();
-	void Bind();
-	void UnBind();
+	void Bind() const;
+	void UnBind() const;
 	void SetUniform(const std::string& uniformName, float v1, float v2, float v3, float v4);
 
 private:

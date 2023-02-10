@@ -1,3 +1,4 @@
+#include "GL/glew.h"
 #include "VertexBuffer.h"
 #include "utils/glErrorUtils.h"
 #include <exception>
@@ -15,12 +16,12 @@ VertexBuffer::~VertexBuffer()
 	GlCall(glDeleteBuffers(1, &m_RendererId));
 }
 
-void VertexBuffer::Bind()
+void VertexBuffer::Bind() const
 {
 	GlCall(glBindBuffer(GL_ARRAY_BUFFER, m_RendererId));
 }
 
-void VertexBuffer::UnBind()
+void VertexBuffer::UnBind() const
 {
 	GlCall(glBindBuffer(GL_ARRAY_BUFFER, 0));
 }

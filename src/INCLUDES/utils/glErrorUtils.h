@@ -1,6 +1,6 @@
 #pragma once
-#include <GL/glew.h>
-#include <iostream>
+
+#include <exception>
 
 #define ASSERT(x) if ((x)) std::terminate;
 #define GlCall(x) GlClearError(); x; ASSERT(GlLogMessage(#x, __FILE__, __LINE__))

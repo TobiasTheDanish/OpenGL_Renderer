@@ -1,14 +1,26 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
+#include <iostream>
 
 #include "IndexBuffer.h"
-#include "VertexBuffer.h"
+#include "VertexArray.h"
 #include "Shader.h"
 #include "Renderer.h"
+#include "VertexBufferLayout.h"
+#include "utils/glErrorUtils.h"
 
 int main(void)
 {
-	Renderer renderer;
+	Renderer renderer(30);
+
+	GLenum err = glewInit();
+	
+	if (err != GLEW_OK) {
+		//GLEW was not initialized stop the program!
+		return 0;
+	}
+	
+	std::cout << glGetString(GL_VERSION) << std::endl;
 	
 	float positions[] = {
 		-0.5f, -0.5f,
@@ -22,18 +34,20 @@ int main(void)
 		2, 3, 0
 	};
 
+	VertexArray va;
 	VertexBuffer vb(positions, 4 * 2 * sizeof(float));
 
-	GlCall(glEnableVertexAttribArray(0));
-	GlCall(glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 2, 0));
+	VertexBufferLayout layout;
+	layout.Push<float>(2);
+
+	va.AddBuffer(vb, layout);
 
 	IndexBuffer ib(indecies, 6);
 	
 	Shader shader("../res/shaders/basic.shader");
-	shader.Bind();
 	shader.SetUniform("u_Color", 0.3, 0.2, 0.8, 1.0);
 
-	vb.UnBind();
+	va.UnBind();
 	ib.UnBind();
 	shader.UnBind();
 
@@ -49,7 +63,7 @@ int main(void)
 	{
 		if (renderer.ShouldRender())
 		{
-			GlCall(glClear(GL_COLOR_BUFFER_BIT));
+			renderer.Clear();
 
 			if (r >= 1.0) 
 			{
@@ -84,12 +98,10 @@ int main(void)
 
 			b += bOffset;
 
-			vb.Bind();
-			ib.Bind();
 			shader.Bind();
 			shader.SetUniform("u_Color", r, g, b, a);
 
-			GlCall(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr));
+			renderer.Draw(va, ib, shader);
 
 			/* Swap front and back buffers */
 			glfwSwapBuffers(renderer.GetWindow());

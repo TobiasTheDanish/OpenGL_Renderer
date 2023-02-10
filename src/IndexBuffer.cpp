@@ -1,3 +1,4 @@
+#include "GL/glew.h"
 #include "IndexBuffer.h"
 #include "utils/glErrorUtils.h"
 
@@ -15,12 +16,17 @@ IndexBuffer::~IndexBuffer()
 	GlCall(glDeleteBuffers(1, &m_RendererId));
 }
 
-void IndexBuffer::Bind()
+void IndexBuffer::Bind() const
 {
 	GlCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_RendererId));
 }
 
-void IndexBuffer::UnBind()
+void IndexBuffer::UnBind() const
 {
 	GlCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0));
+}
+
+unsigned int IndexBuffer::GetCount() const
+{
+	return m_Count;
 }

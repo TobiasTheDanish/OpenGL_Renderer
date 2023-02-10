@@ -1,6 +1,8 @@
-#include "utils/glErrorUtils.h"
+#include "GL/glew.h"
 #include "Shader.h"
 #include "utils/shaderUtils.h"
+#include "utils/glErrorUtils.h"
+#include <iostream>
 #include <unordered_map>
 
 Shader::Shader(const std::string& filepath)
@@ -8,7 +10,7 @@ Shader::Shader(const std::string& filepath)
 	  m_RendererId(0)
 {
 	m_RendererId = ShaderUtil::SetupShader(filepath);
-	GlCall(glUseProgram(m_RendererId));
+	Bind();
 }
 
 Shader::~Shader()
@@ -16,12 +18,12 @@ Shader::~Shader()
 	GlCall(glDeleteProgram(m_RendererId));
 }
 
-void Shader::Bind()
+void Shader::Bind() const
 {
 	GlCall(glUseProgram(m_RendererId));
 }
 
-void Shader::UnBind()
+void Shader::UnBind() const
 {
 	GlCall(glUseProgram(0));
 }
