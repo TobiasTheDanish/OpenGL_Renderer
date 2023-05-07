@@ -87,7 +87,7 @@ GLFWwindow* Renderer::SetupWindow()
 	window = glfwCreateWindow(1080, 1080, "MY WINDOW!", NULL, NULL);
 
 	glfwSetFramebufferSizeCallback(window, FbSizeCallback);
-
+	
 	if (!window)
 	{
 		glfwTerminate();

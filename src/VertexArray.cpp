@@ -19,13 +19,13 @@ void VertexArray::AddBuffer(const VertexBuffer& vb, const VertexBufferLayout& la
 	vb.Bind();
 
 	const std::vector<VertexBufferElement>& elements = layout.GetElements();
+	unsigned char offset = 0;
 	for (unsigned int i = 0; i < elements.size(); i++)
 	{
 		const VertexBufferElement& element = elements[i];
-		unsigned char offset = 0;
 		GlCall(glEnableVertexAttribArray(i));
 		GlCall(glVertexAttribPointer(i, element.count, element.type, element.normalized, 
-				layout.GetStride(), (const void*)  offset));
+				layout.GetStride(), (const void*) offset));
 		offset += element.count * element.GetSizeOfType(element.type);
 	}
 

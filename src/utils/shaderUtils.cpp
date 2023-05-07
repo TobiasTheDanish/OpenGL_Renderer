@@ -3,6 +3,7 @@
 
 #include <GL/glew.h>
 
+#include <iostream>
 #include <sstream>
 #include <fstream>
 
@@ -50,6 +51,14 @@ unsigned int ShaderUtil::CompileShader(const unsigned int type, const std::strin
 	GlCall(glGetShaderiv(shader, GL_COMPILE_STATUS, &shaderCompiled));
 
 	if (!shaderCompiled) {
+		int infoLogLength;
+		GlCall(glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &infoLogLength));
+		char* infoLog;
+		GlCall(glGetShaderInfoLog(shader, infoLogLength, nullptr, infoLog));
+
+		std::string typeStr = type == GL_FRAGMENT_SHADER? "Fragment" : "VERTEX";
+		std::cout << "[ERROR] " << typeStr << "shader of type " << " didnt compile" << std::endl;
+		std::cout << "[ERROR] " << infoLog << std::endl;
 		GlCall(glDeleteShader(shader));
 		return 0;
 	}

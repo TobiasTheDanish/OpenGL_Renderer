@@ -1,3 +1,5 @@
+#pragma once
+
 #include "GLFW/glfw3.h"
 #include "IndexBuffer.h"
 #include "Shader.h"

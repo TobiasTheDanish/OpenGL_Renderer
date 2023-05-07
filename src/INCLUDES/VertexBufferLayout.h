@@ -4,7 +4,6 @@
 
 struct VertexBufferElement
 {
-
 	unsigned int type;
 	unsigned int count;
 	unsigned char normalized;
