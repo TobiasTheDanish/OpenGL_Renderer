@@ -1,5 +1,3 @@
-#include <exception>
-//
 //glew.h needs to be included before Renderer.h since Renderer.h includes GLFW
 #include "GL/glew.h"
 #include "GLFW/glfw3.h"
@@ -20,14 +18,6 @@ Renderer::Renderer(int framerate)
     glfwMakeContextCurrent(m_Window);
 
 	glfwSwapInterval(1);
-
-	GLenum err = glewInit();
-	
-	if (err != GLEW_OK) {
-		//GLEW was not initialized stop the program!
-		std::terminate();
-	}
-
 }
 
 Renderer::~Renderer()
@@ -56,20 +46,18 @@ bool Renderer::ShouldRender()
 	return false;
 }
 
-void Renderer::Render(void(*render)()) const
+void Renderer::Draw(const VertexArray &va, const IndexBuffer &ib, const Shader &shader) const
 {
-    if (!glfwWindowShouldClose(m_Window))
-	{
-		GlCall(glClear(GL_COLOR_BUFFER_BIT));
-		render();
-		GlCall(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr));
+	shader.Bind();
+	va.Bind();
+	ib.Bind();
 
-        /* Swap front and back buffers */
-        glfwSwapBuffers(m_Window);
+	GlCall(glDrawElements(GL_TRIANGLES, ib.GetCount(), GL_UNSIGNED_INT, nullptr));
+}
 
-        /* Poll for and process events */
-        glfwPollEvents();
-	}
+void Renderer::Clear() const
+{
+	GlCall(glClear(GL_COLOR_BUFFER_BIT));
 }
 
 GLFWwindow* Renderer::SetupWindow() 
@@ -79,8 +67,6 @@ GLFWwindow* Renderer::SetupWindow()
 	/* Initialize the library */
 	if (!glfwInit())
 		return nullptr;
-
-	window = glfwCreateWindow(1080, 1080, "MY WINDOW!", NULL, NULL);
 
 	GLFWmonitor* monitor = glfwGetPrimaryMonitor();
 
@@ -94,8 +80,14 @@ GLFWwindow* Renderer::SetupWindow()
 	glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
 	glfwWindowHint(GLFW_SCALE_TO_MONITOR, GLFW_TRUE);
 
-	glfwSetFramebufferSizeCallback(window, FbSizeCallback);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
+	window = glfwCreateWindow(1080, 1080, "MY WINDOW!", NULL, NULL);
+
+	glfwSetFramebufferSizeCallback(window, FbSizeCallback);
+	
 	if (!window)
 	{
 		glfwTerminate();

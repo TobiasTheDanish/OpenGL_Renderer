@@ -1,4 +1,9 @@
+#pragma once
+
 #include "GLFW/glfw3.h"
+#include "IndexBuffer.h"
+#include "Shader.h"
+#include "VertexArray.h"
 
 class Renderer
 {
@@ -13,7 +18,8 @@ public:
 	GLFWwindow* GetWindow() const;
 	int GetFramerate() const;
 	bool ShouldRender();
-	void Render(void(*render)()) const;
+	void Draw(const VertexArray& va, const IndexBuffer& ib, const Shader& shader) const;
+	void Clear() const;
 
 private:
 	GLFWwindow* SetupWindow();	

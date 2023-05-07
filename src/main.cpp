@@ -1,105 +1,75 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
+#include <cstdio>
+#include <string.h>
 
-#include "IndexBuffer.h"
-#include "VertexBuffer.h"
-#include "Shader.h"
-#include "Renderer.h"
+#include "DoubleMario.h"
+#include "RenderExample2D.h"
+#include "utils/glErrorUtils.h"
 
-int main(void)
+void PrintHelp()
 {
-	Renderer renderer;
+	printf("\nHow to use arguments:  ./app [Options] {Paths}\n");
+	printf("Options:\n");
+	printf("'-2D':\n");
+	printf("    -  If you leave the path blank an image of mario will be rendered.\n");
+	printf("    -  Insert a path to a given image you wish to have rendered.\n");
+	printf("'-help':\n");
+	printf("    -  Displays this message\n");
+}
+
+int main(int argc, char* argv[])
+{
+	Renderer renderer(30);
+
+	GLenum err = glewInit();
 	
-	float positions[] = {
-		-0.5f, -0.5f,
-		 0.5f, -0.5f,
-		 0.5f,  0.5f,
-		-0.5f,  0.5f
-	};
-
-	unsigned int indecies[] = {
-		0, 1, 2,
-		2, 3, 0
-	};
-
-	VertexBuffer vb(positions, 4 * 2 * sizeof(float));
-
-	GlCall(glEnableVertexAttribArray(0));
-	GlCall(glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 2, 0));
-
-	IndexBuffer ib(indecies, 6);
+	if (err != GLEW_OK) {
+		//GLEW was not initialized stop the program!
+		return 0;
+	}
 	
-	Shader shader("../res/shaders/basic.shader");
-	shader.Bind();
-	shader.SetUniform("u_Color", 0.3, 0.2, 0.8, 1.0);
+	//std::cout << glGetString(GL_VERSION) << std::endl;
+	
+	GlCall(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
+	GlCall(glEnable(GL_BLEND));
 
-	vb.UnBind();
-	ib.UnBind();
-	shader.UnBind();
-
-	float r = 0.3;
-	float g = 0.2;
-	float b = 0.8;
-	float a = 1.0;
-	float rOffset, gOffset, bOffset = 0.1;
-
-    /* Loop until the user closes the window */
-
-    while (!glfwWindowShouldClose(renderer.GetWindow()))
+	if (argc <= 1)
 	{
-		if (renderer.ShouldRender())
+		PrintHelp();
+	}
+	else if (argc == 2) 
+	{
+		if (strcmp(argv[1], "-help") == 0)
 		{
-			GlCall(glClear(GL_COLOR_BUFFER_BIT));
+			PrintHelp();
+		}
+		else if (strcmp(argv[1], "-2D") == 0)
+		{
+			const DoubleMario mario;
 
-			if (r >= 1.0) 
-			{
-				rOffset = -0.04;
-			}
-			else if (r <= 0.0)
-			{
-				rOffset = 0.08;
-			}
+			mario.Run(renderer);
+		}
+		else 
+		{
+			printf("\n%s not a valid option\n", argv[1]);
+			PrintHelp();
+		}
+	}
+	else if (argc == 3)
+	{
+		if (strcmp(argv[1], "-2D") == 0)
+		{
+			const RenderExample2D example(argv[2]);
 
-			r += rOffset;
-
-			if (g >= 1.0) 
-			{
-				gOffset = -0.01;
-			}
-			else if (g <= 0.0)
-			{
-				gOffset = 0.05;
-			}
-
-			g += gOffset;
-
-			if (b >= 1.0) 
-			{
-				bOffset = -0.03;
-			}
-			else if (b <= 0.0)
-			{
-				bOffset = 0.02;
-			}
-
-			b += bOffset;
-
-			vb.Bind();
-			ib.Bind();
-			shader.Bind();
-			shader.SetUniform("u_Color", r, g, b, a);
-
-			GlCall(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr));
-
-			/* Swap front and back buffers */
-			glfwSwapBuffers(renderer.GetWindow());
-
-			/* Poll for and process events */
-			glfwPollEvents();
+			example.Run(renderer);
+		}
+		else 
+		{
+			printf("\n%s not a valid option, when a path is given\n", argv[1]);
+			PrintHelp();
 		}
 	}
 
-
     return 0;
 }
-

@@ -13,9 +13,11 @@ private:
 public:
 	Shader(const std::string& filepath);
 	~Shader();
-	void Bind();
-	void UnBind();
-	void SetUniform(const std::string& uniformName, float v1, float v2, float v3, float v4);
+	void Bind() const;
+	void UnBind() const;
+	void SetUniform1i(const std::string& uniformName, int value);
+	void SetUniform1f(const std::string& uniformName, float value);
+	void SetUniform4f(const std::string& uniformName, float v1, float v2, float v3, float v4);
 
 private:
 	int GetUniformLocation(const std::string& uniformName);

@@ -1,5 +1,4 @@
 #pragma once
-#include "utils/glErrorUtils.h"
 
 class VertexBuffer 
 {
@@ -7,9 +6,11 @@ private:
 	unsigned int m_RendererId;
 
 public:
+	VertexBuffer();
 	VertexBuffer(const void* data, unsigned int size);
 	~VertexBuffer();
 
-	void Bind();
-	void UnBind();
+	void Bind() const;
+	void UnBind() const;
+	void SetBuffer(const void* data, unsigned int size);
 };
