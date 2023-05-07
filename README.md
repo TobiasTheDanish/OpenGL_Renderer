@@ -6,9 +6,9 @@ This project is made following [The Cherno](https://www.youtube.com/@TheCherno)'
 # Dependencies
 - stb_image (found under src/vendor)
 
-**Dependencies listed here are not included in this repo**
-- GLFW
-- GLEW
+Dependencies listed here are **NOT** included in this repo, and needs to be installed manually.
+- GLFW (A wrapper for window creation)
+- GLEW (A wrapper for OpenGL instructions)
 
 # Building
 When dependencies are installed, use the following commands:
@@ -17,7 +17,8 @@ mkdir build
 cd build
 cmake ..
 make
-./app
+./app -2D
 ```
 
+The argument '-2D' should display an image of Mario on a colorful background.
 You can use `./app -help` for instructions on how to use additional arguments.
